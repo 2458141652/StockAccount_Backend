@@ -132,8 +132,8 @@ public class StockController {
     @RequestMapping("/user_add_by_banker")
     public @ResponseBody SimpleStatus addUserByBanker(@CookieValue(value = BankerCookieIdName, defaultValue = "") String id
             , @CookieValue(value = BankerCookieName, defaultValue = "") String cookie
-            //, @RequestParam String account_id
-            //, @RequestParam String password
+                                                      //, @RequestParam String account_id
+                                                      //, @RequestParam String password
             , @RequestParam String account_type){
         SimpleStatus status = getBankerLoginStatus(id, cookie);
         if (status.getStatus() != 0){
@@ -150,7 +150,7 @@ public class StockController {
         user.setAccount_type(account_type);
         user.setStatus(NormalStatus);
         StockAccountUserRepository.save(user);
-        return new SimpleStatus(0, "success");
+        return new SimpleStatus(0, user.getAccount_id().toString());
     }
 
     private SimpleStatus setUserStatus(String id, String cookie, String account_id, String fromStatus, String toStatus){
@@ -193,8 +193,8 @@ public class StockController {
             return new SimpleStatus(1, "user not exists");
         }
         StockAccountPersonalUser personalUser = list.get(0);
-        String account_id = personalUser.getAccount_id();
-        return setUserStatus(id, cookie, account_id, NormalStatus, FrozenStatus);
+        Long account_id = personalUser.getAccount_id();
+        return setUserStatus(id, cookie, account_id.toString(), NormalStatus, FrozenStatus);
     }
 
     @Transactional
@@ -221,8 +221,8 @@ public class StockController {
             return new SimpleStatus(1, "user not exists");
         }
         StockAccountPersonalUser personalUser = list.get(0);
-        String account_id = personalUser.getAccount_id();
-        return setUserStatus(id, cookie, account_id, FrozenStatus, NormalStatus);
+        Long account_id = personalUser.getAccount_id();
+        return setUserStatus(id, cookie, account_id.toString(), FrozenStatus, NormalStatus);
     }
 
 //    @Transactional
@@ -249,46 +249,46 @@ public class StockController {
     public SimpleStatus deleteLegalUserByBanker(@CookieValue(value = BankerCookieIdName, defaultValue = "") String id
             , @CookieValue(value = BankerCookieName, defaultValue = "") String cookie
             , @RequestParam String legal_num) {
-            List<StockAccountLegalUser> list = StockAccountLegalUserRepository.findByLegal_num(legal_num);
-            if (list.size() == 0){
-                return new SimpleStatus(1, "user not exists");
-            }
-            StockAccountLegalUser legalUser= list.get(0);
-            String account_id = list.get(0).getAccount_id();
-            UserFindByBanker result = getUserByBanker(id, cookie, account_id);
-            StockAccountUser user = result.getUser();
-            if (result.getStatus() != 0 || user == null){
-                return new SimpleStatus(1, "user not exists");
-            }
-            if (getUserStock(account_id) != 0){
-                return new SimpleStatus(2, "user holds stock");
-            }
-            StockAccountLegalUserRepository.delete(legalUser);
-            StockAccountUserRepository.delete(user);
-            return new SimpleStatus(0, "success");
+        List<StockAccountLegalUser> list = StockAccountLegalUserRepository.findByLegal_num(legal_num);
+        if (list.size() == 0){
+            return new SimpleStatus(1, "user not exists");
+        }
+        StockAccountLegalUser legalUser= list.get(0);
+        String account_id = list.get(0).getAccount_id();
+        UserFindByBanker result = getUserByBanker(id, cookie, account_id);
+        StockAccountUser user = result.getUser();
+        if (result.getStatus() != 0 || user == null){
+            return new SimpleStatus(1, "user not exists");
+        }
+        if (getUserStock(account_id) != 0){
+            return new SimpleStatus(2, "user holds stock");
+        }
+        StockAccountLegalUserRepository.delete(legalUser);
+        StockAccountUserRepository.delete(user);
+        return new SimpleStatus(0, "success");
     }
 
     @RequestMapping("/personal_user_delete_by_banker")
     public SimpleStatus deletePersonalUserByBanker(@CookieValue(value = BankerCookieIdName, defaultValue = "") String id
             , @CookieValue(value = BankerCookieName, defaultValue = "") String cookie
             , @RequestParam String id_num) {
-            List<StockAccountPersonalUser> list = StockAccountPersonalUserRepository.findById_num(id_num);
-            if (list.size() == 0){
-                return new SimpleStatus(1, "user not exists");
-            }
-            StockAccountPersonalUser personalUser = list.get(0);
-            String account_id = personalUser.getAccount_id();
-            UserFindByBanker result = getUserByBanker(id, cookie, account_id);
-            StockAccountUser user = result.getUser();
-            if (result.getStatus() != 0 || user == null){
-                return new SimpleStatus(1, "user not exists");
-            }
-            if (getUserStock(account_id) != 0){
-                return new SimpleStatus(2, "user holds stock");
-            }
-            StockAccountPersonalUserRepository.delete(personalUser);
-            StockAccountUserRepository.delete(user);
-            return new SimpleStatus(0, "success");
+        List<StockAccountPersonalUser> list = StockAccountPersonalUserRepository.findById_num(id_num);
+        if (list.size() == 0){
+            return new SimpleStatus(1, "user not exists");
+        }
+        StockAccountPersonalUser personalUser = list.get(0);
+        String account_id = personalUser.getAccount_id().toString();
+        UserFindByBanker result = getUserByBanker(id, cookie, account_id);
+        StockAccountUser user = result.getUser();
+        if (result.getStatus() != 0 || user == null){
+            return new SimpleStatus(1, "user not exists");
+        }
+        if (getUserStock(account_id) != 0){
+            return new SimpleStatus(2, "user holds stock");
+        }
+        StockAccountPersonalUserRepository.delete(personalUser);
+        StockAccountUserRepository.delete(user);
+        return new SimpleStatus(0, "success");
     }
 
 //    @RequestMapping("/user_delete_by_banker")
@@ -367,8 +367,8 @@ public class StockController {
     @RequestMapping("/personal_user_add_by_banker")
     public SimpleStatus addPersonalUserByBanker(@CookieValue(value = BankerCookieIdName, defaultValue = "") String id
             , @CookieValue(value = BankerCookieName, defaultValue = "") String cookie
-            //, @RequestParam String account_id
-            //, @RequestParam String password
+//            , @RequestParam String account_id
+//            , @RequestParam String password
             , @RequestParam String name
             , @RequestParam String gender
             , @RequestParam String id_num
@@ -377,15 +377,15 @@ public class StockController {
             , @RequestParam String degree
             , @RequestParam String organization
             , @RequestParam String phone_num
-            , @RequestParam boolean agency
+            , @RequestParam (defaultValue = "false") boolean agency
             , @RequestParam(defaultValue = "") String agent_id_num
     ){
         SimpleStatus status = addUserByBanker(id, cookie, PersonalUserType);
         if (status.getStatus() != 0){
             return status;
         }
-        StockAccountPersonalUser user = new StockAccountPersonalUser( //account_id
-                 new Date()
+        StockAccountPersonalUser user = new StockAccountPersonalUser( Long.parseLong(status.getMessage())
+                , new Date()
                 , name
                 , gender
                 , id_num
@@ -397,18 +397,19 @@ public class StockController {
                 , agency
                 , agent_id_num);
         StockAccountPersonalUserRepository.save(user);
+
         return new SimpleStatus(0, "success");
     }
 
     @RequestMapping("/personal_user_find_by_banker")
     public StockAccountPersonalUser getPersonalUserByBanker(@CookieValue(value = BankerCookieIdName, defaultValue = "") String id
             , @CookieValue(value = BankerCookieName, defaultValue = "") String cookie
-            , @RequestParam String account_id){
+            , @RequestParam String Id_num){
         SimpleStatus status = getBankerLoginStatus(id, cookie);
         if (status.getStatus() != 0){
             return new StockAccountPersonalUser();
         }
-        List<StockAccountPersonalUser> list = StockAccountPersonalUserRepository.findByAccountId(account_id);
+        List<StockAccountPersonalUser> list = StockAccountPersonalUserRepository.findById_num(Id_num);
         if (list.size() == 0){
             return new StockAccountPersonalUser();
         }
@@ -418,8 +419,8 @@ public class StockController {
     @RequestMapping("/legal_user_add_by_banker")
     public SimpleStatus addLegalUserByBanker(@CookieValue(value = BankerCookieIdName, defaultValue = "") String id
             , @CookieValue(value = BankerCookieName, defaultValue = "") String cookie
-            //, @RequestParam String account_id
-            //, @RequestParam String password
+//            , @RequestParam String account_id
+//            , @RequestParam String password
             , @RequestParam String legal_num
             , @RequestParam String license_num
             , @RequestParam String legal_name
@@ -434,8 +435,8 @@ public class StockController {
         if (status.getStatus() != 0){
             return status;
         }
-        StockAccountLegalUser user = new StockAccountLegalUser(//account_id
-                 legal_num
+        StockAccountLegalUser user = new StockAccountLegalUser(Long.parseLong(status.getMessage())
+                , legal_num
                 , license_num
                 , legal_name
                 , legal_id_num
@@ -452,11 +453,11 @@ public class StockController {
     @RequestMapping("/legal_user_find_by_banker")
     public StockAccountLegalUser getLegalUserByBanker(@CookieValue(value = BankerCookieIdName, defaultValue = "") String id
             , @CookieValue(value = BankerCookieName, defaultValue = "") String cookie
-            , @RequestParam String account_id){
+            , @RequestParam String legal_num){
         if (getBankerLoginStatus(id, cookie).getStatus() != 0) {
             return new StockAccountLegalUser();
         }
-        List<StockAccountLegalUser> list = StockAccountLegalUserRepository.findByAccountId(account_id);
+        List<StockAccountLegalUser> list = StockAccountLegalUserRepository.findByLegal_num(legal_num);
         if (list.size() == 0){
             return new StockAccountLegalUser();
         }

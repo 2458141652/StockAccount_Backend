@@ -1,21 +1,24 @@
 package hello.model;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
 public class StockAccountUser {
     @Id
-    private String account_id;
-//    private String password;
+    @GeneratedValue//(strategy= GenerationType.IDENTITY)
+    private Long account_id;
+    //    private String password;
     private String account_type;
     private String status;
 
-    public String getAccount_id() {
+    public Long getAccount_id() {
         return account_id;
     }
 
-    public void setAccount_id(String account_id) {
+    public void setAccount_id(Long account_id) {
         this.account_id = account_id;
     }
 

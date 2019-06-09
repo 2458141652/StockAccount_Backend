@@ -6,7 +6,7 @@ import java.util.Date;
 @Entity
 public class StockAccountLegalUser {
     @Id
-    @GeneratedValue
+    //@GeneratedValue
     private Long account_id;  // 法人股票账户号码
     @Column(nullable = false, unique = true)
     private String legal_num;  //法人注册登记号码
@@ -31,8 +31,8 @@ public class StockAccountLegalUser {
 
     public StockAccountLegalUser(){}
 
-    public StockAccountLegalUser(//String account_id
-            String legal_num
+    public StockAccountLegalUser(Long account_id
+            , String legal_num
             , String license_num
             , String legal_name
             , String legal_id_num
@@ -42,7 +42,7 @@ public class StockAccountLegalUser {
             , String authorize_id_num
             , String authorize_address
             , String authorize_phone) {
-   //     this.account_id = account_id;
+        this.account_id = account_id;
         this.legal_num = legal_num;
         this.license_num = license_num;
         this.legal_name = legal_name;
@@ -59,9 +59,9 @@ public class StockAccountLegalUser {
         return account_id.toString();
     }
 
-//    public void setAccount_id(String account_id) {
-//        this.account_id = account_id;
-//    }
+    public void setAccount_id(Long account_id) {
+        this.account_id = account_id;
+    }
 
     public String getLegal_num() {
         return legal_num;

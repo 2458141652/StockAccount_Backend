@@ -1,15 +1,12 @@
 package hello.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
 
 @Entity
 public class StockAccountPersonalUser {
     @Id
-    @GeneratedValue
+    //@GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long account_id;
     @Column(nullable = false)
     private Date date;
@@ -36,8 +33,8 @@ public class StockAccountPersonalUser {
 
     public StockAccountPersonalUser(){}
 
-    public StockAccountPersonalUser( //String account_id
-            Date date
+    public StockAccountPersonalUser( Long account_id
+            , Date date
             , String name
             , String gender
             , String id_num
@@ -48,7 +45,7 @@ public class StockAccountPersonalUser {
             , String phone_num
             , boolean agency
             , String agent_id_num){
-        //this.account_id = account_id;
+        this.account_id = account_id;
         this.date = date;
         this.name = name;
         this.gender = gender;
@@ -62,8 +59,8 @@ public class StockAccountPersonalUser {
         this.agent_idnum = agent_id_num;
     }
 
-    public String getAccount_id() {
-        return account_id.toString();
+    public Long getAccount_id() {
+        return account_id;
     }
 
     public Date getDate() {
@@ -110,9 +107,9 @@ public class StockAccountPersonalUser {
         return phone_num;
     }
 
-//    public void setAccount_id(String account_id) {
-//        this.account_id = account_id;
-//    }
+    public void setAccount_id(Long account_id) {
+        this.account_id = account_id;
+    }
 
     public void setDate(Date date) {
         this.date = date;
